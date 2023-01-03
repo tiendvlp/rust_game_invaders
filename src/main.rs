@@ -1,6 +1,6 @@
 #![allow(unused)]
 
-use bevy::prelude::*;
+use bevy::{prelude::*, transform};
 
 const PLAYER_SPRITE: &str = "player_a_01.png";
 const PLAYER_SIZE: (f32, f32) = (144., 75.);
@@ -21,19 +21,28 @@ fn main() {
     .run();
 }
 
-fn setup_systems(mut commands: Commands) {
-    // region camera
+fn setup_systems(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut windows: ResMut<Windows>
+) {
+    // Add camera
     commands.spawn(Camera2dBundle::default());
-    // endregion camera
 
-    // region add rectangle
+    // Capture window size
+    let window = windows.get_primary_mut().unwrap();
+    let (ww, wh) = (window.width(), window.height());
+    window.set_position(MonitorSelection::Current, IVec2::new(0, 0));
+    
+    // Add player
+    let bottom = wh / 2. - PLAYER_SIZE.1;
+    let center = 0.;
     commands.spawn(SpriteBundle {
-        sprite: Sprite {
-            color: Color::rgb(0.25, 0.25, 0.75),
-            custom_size: Some(Vec2::new(150., 150.)),
+        texture: asset_server.load(PLAYER_SPRITE),
+        transform: Transform {
+            translation: Vec3::new(center, -bottom, 1.),
             ..Default::default()
         },
         ..Default::default()
     });
-    // endregion
 }
