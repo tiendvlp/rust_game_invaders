@@ -1,0 +1,47 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+**/build/*
+**/cache/*
+**/bin/*
+**/.cargo/*
+**/node_modules/*
+dist
+dist-ssr
+*.local
+
+# Spawned schema files
+**/appium-executor/**/schema/*
+**/desktop/**/schema/*
+**/js-utils/**/schema/*
+
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+**/.vscode
+
+**/cached
+**/.DS_Store
+**/yarn-error.log
+**/.idea/**
+**/target
+**/Cargo.lock
+**.node
+**.wasm
+**/.fleet/**
+
+# Ignore sidecar binary files
+**/sidecar/*
