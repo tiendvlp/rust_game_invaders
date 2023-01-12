@@ -16,7 +16,8 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_startup_system_to_stage(StartupStage::PostStartup, player_spawn_system)
-            .add_system(player_movement_system);
+            .add_system(player_movement_system)
+            .add_system(player_keyboard_event_system);
     }
 }
 
@@ -37,7 +38,7 @@ fn player_spawn_system(
         ..Default::default()
     })
     .insert(Player)
-    .insert(Velocity {x: 1., y: 0.});
+    .insert(Velocity {x: 0., y: 0.});
 
     info!("Player plugin initiated");
 }
@@ -51,3 +52,17 @@ fn player_movement_system(
     }
 }
 
+fn player_keyboard_event_system(
+    kb: Res<Input<KeyCode>>,
+    mut query: Query<&mut Velocity, With<Player>>
+) {
+    if let Ok(mut velocity) = query.get_single_mut() {
+        velocity.x = if kb.pressed(KeyCode::Left) {
+            -1.
+        } else if kb.pressed(KeyCode::Right) {
+            1.
+        } else {
+            0.
+        };
+    }
+}

@@ -12,7 +12,7 @@ impl Default for Config {
             PLAYER_SIZE: (144., 75.),
             SPRITE_SCALE: (0.5, 0.5),
             PLAYER_SPRITE: String::from("player_a_01.png"),
-            BASE_SPEED: 1.,
+            BASE_SPEED: 500.,
             TIME_STEP: (1. / 60.)
         }
     }
