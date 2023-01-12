@@ -16,7 +16,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_startup_system_to_stage(StartupStage::PostStartup, player_spawn_system)
-            .add_system(player_movement_system)
+            .add_system(player_movement_provider_system)
             .add_system(player_keyboard_event_system);
     }
 }
@@ -43,7 +43,7 @@ fn player_spawn_system(
     info!("Player plugin initiated");
 }
 
-fn player_movement_system(
+fn player_movement_provider_system(
     mut query: Query<(&Velocity, &mut Transform), With<Player>>) {
     for (velocity, mut transform) in query.iter_mut() {
         let mut translation = transform.translation.borrow_mut();
