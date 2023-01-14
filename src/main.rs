@@ -1,18 +1,16 @@
 #![allow(unused)]
 #[macro_use]
 extern crate lazy_static;
-
 use std::{sync::Arc, borrow::BorrowMut};
 mod components;
 mod player;
 mod config;
 use bevy::{prelude::*, transform};
+use components::GameTextures;
+use config::CONFIG;
 
-use crate::components::{Player, Velocity};
+use crate::components::{Player, Velocity, WindowSize};
 use crate::player::PlayerPlugin;
-
-#[derive(Resource)]
-pub struct WindowSize (f32, f32);
 
 fn main() {
   App::new()
@@ -43,5 +41,12 @@ fn setup_systems(
     let window_size = WindowSize(window.width(), window.height());
     commands.insert_resource(window_size);
     window.set_position(MonitorSelection::Current, IVec2::new(0, 0));
+
+    // Add Game Asset Resource
+    let game_resource = GameTextures {
+        player: asset_server.load(CONFIG.PLAYER_SPRITE.as_str()),
+        player_laser: asset_server.load(CONFIG.PLAYER_LASER_SPRITE.as_str())
+    };
+    commands.insert_resource(game_resource);
 }
 
