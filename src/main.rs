@@ -52,11 +52,22 @@ fn setup_systems(
 }
 
 fn movement_system(
+    mut commands: Commands,
+    win_size: Res<WindowSize>,
     mut query: Query<(Entity, &Velocity, &mut Transform, &Movable)>) {
     for (entity, velocity, mut transform, movable) in query.iter_mut() {
         let mut translation = transform.translation.borrow_mut();
         translation.x += velocity.x * CONFIG.BASE_SPEED * CONFIG.TIME_STEP;
         translation.y += velocity.y * CONFIG.BASE_SPEED * CONFIG.TIME_STEP;
+
+        if movable.auto_despawn {
+            if translation.y > win_size.1 / 2. ||
+               translation.y < -win_size.1 / 2. || 
+               translation.x > win_size.0 / 2. || 
+               translation.x < -win_size.0 / 2. {
+                commands.entity(entity).despawn();
+            } 
+        }
     }
 }
 
