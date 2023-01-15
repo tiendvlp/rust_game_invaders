@@ -19,7 +19,6 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_startup_system_to_stage(StartupStage::PostStartup, player_spawn_system)
-            .add_system(player_movement_provider_system)
             .add_system(player_keyboard_event_system)
             .add_system(player_fire_system);
     }
@@ -42,18 +41,10 @@ fn player_spawn_system(
         ..Default::default()
     })
     .insert(Player)
+    .insert(Movable {auto_despawn: false})
     .insert(Velocity {x: 0., y: 0.});
 
     info!("Player plugin initiated");
-}
-
-fn player_movement_provider_system(
-    mut query: Query<(&Velocity, &mut Transform), With<Player>>) {
-    for (velocity, mut transform) in query.iter_mut() {
-        let mut translation = transform.translation.borrow_mut();
-        translation.x += velocity.x * CONFIG.BASE_SPEED * CONFIG.TIME_STEP;
-        translation.y += velocity.y * CONFIG.BASE_SPEED * CONFIG.TIME_STEP;
-    }
 }
 
 fn player_keyboard_event_system(
@@ -90,18 +81,9 @@ fn player_fire_system(
                 texture: textures.player_laser.clone(),
                 ..Default::default()
             })
-            .insert(Movable { auto_despawn: true});
+            .insert(Movable { auto_despawn: true})
+            .insert(Velocity {x: 0., y: 2.});
         }
     }    
-}
-
-fn player_laser_movement_system(
-    mut commands: Commands,
-    win_size: Res<WindowSize>,
-    query: Query<(Entity, &Velocity, &mut Transform, &Movable),With<Movable>>
-) {
-   for (velocity, mut transform) in query.iter_mut() {
-       let translation = &mut transform.translation; 
-   } 
 }
 

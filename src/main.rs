@@ -6,7 +6,7 @@ mod components;
 mod player;
 mod config;
 use bevy::{prelude::*, transform};
-use components::GameTextures;
+use components::{GameTextures, Movable};
 use config::CONFIG;
 
 use crate::components::{Player, Velocity, WindowSize};
@@ -26,6 +26,7 @@ fn main() {
         ..Default::default()
     }))
     .add_startup_system(setup_systems)
+    .add_system(movement_system)
     .run();
 }
 
@@ -48,5 +49,14 @@ fn setup_systems(
         player_laser: asset_server.load(CONFIG.PLAYER_LASER_SPRITE.as_str())
     };
     commands.insert_resource(game_resource);
+}
+
+fn movement_system(
+    mut query: Query<(Entity, &Velocity, &mut Transform, &Movable)>) {
+    for (entity, velocity, mut transform, movable) in query.iter_mut() {
+        let mut translation = transform.translation.borrow_mut();
+        translation.x += velocity.x * CONFIG.BASE_SPEED * CONFIG.TIME_STEP;
+        translation.y += velocity.y * CONFIG.BASE_SPEED * CONFIG.TIME_STEP;
+    }
 }
 
