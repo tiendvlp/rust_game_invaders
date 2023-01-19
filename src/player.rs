@@ -28,7 +28,7 @@ fn player_spawn_system(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut window_size: ResMut<WindowSize>) {
-    
+
     let bottom = window_size.1 / 2. - CONFIG.PLAYER_SIZE.1 * CONFIG.SPRITE_SCALE.0;
     let center = 0.;
     let mut player = commands.spawn(SpriteBundle {
@@ -84,11 +84,12 @@ fn player_fire_system(
                 .insert(Movable { auto_despawn: true})
                 .insert(Velocity {x: 0., y: 2.});
             };
-
+            
+            // The distance between middle and hands of player
             let x_offset = (CONFIG.PLAYER_SIZE.0 / 2.) * CONFIG.SPRITE_SCALE.0 - 5.;
             laser_spawn(x_offset);
             laser_spawn(x_offset * -1.);
-       }
+        }    
     }    
 }
 

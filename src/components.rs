@@ -1,4 +1,7 @@
-use bevy::{prelude::{Component, Resource, Handle, Image}, sprite::TextureAtlas};
+use bevy::{
+    prelude::{Component, Resource, Handle, Image},
+    sprite::TextureAtlas
+};
 
 #[derive(Component)]
 pub struct Velocity {

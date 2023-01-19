@@ -8,7 +8,6 @@ mod config;
 use bevy::{prelude::*, transform};
 use components::{GameTextures, Movable};
 use config::CONFIG;
-
 use crate::components::{Player, Velocity, WindowSize};
 use crate::player::PlayerPlugin;
 
@@ -26,6 +25,7 @@ fn main() {
         ..Default::default()
     }))
     .add_startup_system(setup_systems)
+    .add_startup_system(setup_resources)
     .add_system(movement_system)
     .run();
 }
@@ -37,13 +37,17 @@ fn setup_systems(
 ) {
     // Add camera
     commands.spawn(Camera2dBundle::default());
-    // Capture window size
+}
+
+fn setup_resources (
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut windows: ResMut<Windows>
+) {
     let window = windows.get_primary_mut().unwrap();
     let window_size = WindowSize(window.width(), window.height());
     commands.insert_resource(window_size);
-    window.set_position(MonitorSelection::Current, IVec2::new(0, 0));
 
-    // Add Game Asset Resource
     let game_resource = GameTextures {
         player: asset_server.load(CONFIG.PLAYER_SPRITE.as_str()),
         player_laser: asset_server.load(CONFIG.PLAYER_LASER_SPRITE.as_str())
@@ -59,15 +63,15 @@ fn movement_system(
         let mut translation = transform.translation.borrow_mut();
         translation.x += velocity.x * CONFIG.BASE_SPEED * CONFIG.TIME_STEP;
         translation.y += velocity.y * CONFIG.BASE_SPEED * CONFIG.TIME_STEP;
+        
+        let crossed_border = translation.y > win_size.1 / 2. ||
+            translation.y < -win_size.1 / 2. || 
+            translation.x > win_size.0 / 2. || 
+            translation.x < -win_size.0 / 2.;
 
-        if movable.auto_despawn {
-            if translation.y > win_size.1 / 2. ||
-               translation.y < -win_size.1 / 2. || 
-               translation.x > win_size.0 / 2. || 
-               translation.x < -win_size.0 / 2. {
-                commands.entity(entity).despawn();
-            } 
-        }
+        if movable.auto_despawn && crossed_border { 
+            commands.entity(entity).despawn();
+        } 
     }
 }
 
