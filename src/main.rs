@@ -3,6 +3,7 @@
 extern crate lazy_static;
 use std::{sync::Arc, borrow::BorrowMut};
 mod components;
+mod enemy;
 mod player;
 mod config;
 use bevy::{prelude::*, transform};
@@ -50,7 +51,9 @@ fn setup_resources (
 
     let game_resource = GameTextures {
         player: asset_server.load(CONFIG.PLAYER_SPRITE.as_str()),
-        player_laser: asset_server.load(CONFIG.PLAYER_LASER_SPRITE.as_str())
+        player_laser: asset_server.load(CONFIG.PLAYER_LASER_SPRITE.as_str()),
+        enemy: asset_server.load(CONFIG.ENEMY_SPRITE.as_str()),
+        enemy_laser: asset_server.load(CONFIG.ENEMY_LASER_SPRITE.as_str())
     };
     commands.insert_resource(game_resource);
 }

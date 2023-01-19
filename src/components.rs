@@ -13,6 +13,9 @@ pub struct Velocity {
 pub struct Player;
 
 #[derive(Component)]
+pub struct Enemy;
+
+#[derive(Component)]
 pub struct Movable {
     pub auto_despawn: bool
 }
@@ -21,6 +24,8 @@ pub struct Movable {
 pub struct GameTextures {
 	pub player: Handle<Image>,
 	pub player_laser: Handle<Image>,
+    pub enemy: Handle<Image>,
+    pub enemy_laser: Handle<Image>
 }
 
 #[derive(Resource)]
