@@ -1,12 +1,23 @@
 use bevy::prelude::*;
 use rand::{thread_rng, Rng};
-use crate::{GameTextures, components::WindowSize, config::CONFIG};
+use crate::{
+    GameTextures,
+    components::{WindowSize, Enemy},
+    config::CONFIG
+};
 
-struct EnemyPlugin;
+pub struct EnemyPlugin;
 
 impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
-       app.add_startup_system(enemy_spawn_system); 
+       app.add_startup_system_to_stage(StartupStage::PostStartup, enemy_spawn_system); 
+
+    }
+}
+
+impl EnemyPlugin {
+    pub fn new() -> Self {
+        EnemyPlugin {}
     }
 }
 
@@ -25,9 +36,10 @@ fn enemy_spawn_system(
         texture: game_texture.enemy.clone(),
         transform: Transform {
             translation: Vec3::new(x, y, 10.),
-            scale: Vec3::new(CONFIG.SPRITE_SCALE.0, CONFIG.SPRITE_SCALE.1, 1),
+            scale: Vec3::new(CONFIG.SPRITE_SCALE.0, CONFIG.SPRITE_SCALE.1, 1.),
             ..Default::default()
         },
         ..Default::default()
-    });
+    })
+    .insert(Enemy);
 }

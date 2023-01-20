@@ -9,6 +9,7 @@ mod config;
 use bevy::{prelude::*, transform};
 use components::{GameTextures, Movable};
 use config::CONFIG;
+use enemy::EnemyPlugin;
 use crate::components::{Player, Velocity, WindowSize};
 use crate::player::PlayerPlugin;
 
@@ -16,6 +17,7 @@ fn main() {
   App::new()
     .insert_resource(ClearColor(Color::rgb(0.04, 0.04, 0.04)))
     .add_plugin(PlayerPlugin::new())
+    .add_plugin(EnemyPlugin::new())
     .add_plugins(DefaultPlugins.set(WindowPlugin {
        window: WindowDescriptor {
             title: "Rust Invader!".to_string(),
